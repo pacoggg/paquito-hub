@@ -91,14 +91,25 @@ function parseDNS(out) {
 }
 
 function parsePaquitoStatus(out) {
+    if (out === 'TIMEOUT') return "TIMEOUT";
     if (!out) return "ERROR";
-    const lower = out.toLowerCase();
-    if (lower.includes("no detectado")) return "OFFLINE";
-    if (lower.match(/openclaw/i)) return "ONLINE";
+    console.log("[Overview] raw check_paquito_status:\n", out);
+    
+    // Buscar si hay algún proceso "openclaw" ignorando el propio comando de chequeo
+    const lines = out.split('\n');
+    for (const line of lines) {
+        if (line.includes('bash -c') || line.includes('echo') || line.toLowerCase().includes('no detectado')) {
+            continue;
+        }
+        if (/openclaw/i.test(line)) {
+            return "ONLINE";
+        }
+    }
     return "OFFLINE";
 }
 
 function parseProxmoxVMs(out) {
+    if (out === 'TIMEOUT') return "TIMEOUT";
     if (!out) return "ERROR";
     try {
         const lower = out.toLowerCase();
@@ -147,10 +158,14 @@ app.get('/api/overview', async (req, res) => {
     await Promise.allSettled(
         actions.map(async (action) => {
             try {
-                results[action] = await runActionWithTimeout(action, 8000); // Increased timeout to 8s for SSH
+                results[action] = await runActionWithTimeout(action, 15000); // 15s timeout
             } catch (err) {
                 console.error(`[Overview] Action ${action} failed:`, err);
-                results[action] = null;
+                if (err && err.message === 'Timeout') {
+                    results[action] = 'TIMEOUT';
+                } else {
+                    results[action] = null;
+                }
             }
         })
     );

@@ -30,7 +30,7 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 15px; scroll-behavior: smooth; overflow: hidden; --left-width: 50%; }
+html { font-size: 15px; scroll-behavior: smooth; overflow-x: hidden; overflow-y: auto; --left-width: 50%; }
 
 body {
     font-family: 'Inter', -apple-system, sans-serif;
@@ -107,6 +107,7 @@ body::before {
     padding: 16px;
     background: rgba(0, 0, 0, 0.2);
     min-width: 420px;
+    overflow-y: auto;
 }
 
 /* ── Header ── */
@@ -364,13 +365,46 @@ body::before {
 @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
 /* ── Responsive ── */
-@media (max-width: 1100px) {
-    .main-dashboard { grid-template-columns: 1fr; height: auto; overflow-y: auto; }
-    .column-resizer { display: none; }
-    .left-control-column, .right-work-column { height: auto; overflow: visible; border-right: none; min-width: 0; }
-    .right-work-column { min-height: 600px; }
-    .chat-messages, .console-output { height: 400px; flex: none; }
-    .tab-content.active { height: 500px; }
+@media (max-width: 1100px), (max-height: 800px) {
+    html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+    }
+
+    .main-dashboard {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+
+    .column-resizer {
+        display: none;
+    }
+
+    .left-control-column, .right-work-column {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        border-right: none;
+        min-width: 0;
+    }
+
+    .right-work-column {
+        min-height: 600px;
+        background: transparent;
+    }
+
+    .chat-messages, .console-output {
+        height: 450px;
+        flex: none;
+    }
+
+    .tab-content.active {
+        height: auto;
+        min-height: 550px;
+    }
 }
 
 @media (max-width: 700px) {

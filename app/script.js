@@ -82,83 +82,55 @@ function updateMetric(id, value) {
     }
 }
 
-async function refreshMetrics() {
-    $$('.metric-value').forEach(el => { el.classList.add('loading'); el.textContent = '...'; });
+// ── Overview Fetching ──
+async function fetchOverview() {
+    const data = await apiGet('/api/overview');
+    if (!data) return;
 
-    // Server status
-    const status = await apiGet('/api/status');
-    const dot = $('#server-dot');
-    const label = $('#server-label');
-    if (status.status === 'ok') {
-        dot.classList.remove('offline');
-        label.textContent = 'Online';
-        updateMetric('uptime', formatUptime(status.uptime));
-    } else {
-        dot.classList.add('offline');
-        label.textContent = 'Offline';
-    }
+    // Hub
+    updateStatus('metric-hub-ram', data.hub?.ram);
+    updateStatus('metric-hub-disk', data.hub?.disk);
+    updateStatus('metric-hub-dns', data.hub?.dns);
 
-    // System info
-    const sys = await apiGet('/api/system-info');
-    if (sys.success) {
-        const d = sys.data;
-        updateMetric('ram', d.check_hub_ram?.success ? parseRAM(d.check_hub_ram.output) : 'N/A');
-        updateMetric('disk', d.check_hub_disk?.success ? parseDisk(d.check_hub_disk.output) : 'N/A');
-        updateMetric('dns', d.check_hub_dns?.success ? '● OK' : '✗ Fail');
-        
-        // Paquito CT 103 status (shows if openclaw is running)
-        updateMetric('paquito-status', d.check_paquito_status?.success ? '🔌 ONLINE' : '🔌 OFFLINE');
-        updateMetric('paquito-ram', d.check_paquito_ram?.success ? parseRAM(d.check_paquito_ram.output) : 'N/A');
-        updateMetric('paquito-disk', d.check_paquito_disk?.success ? parseDisk(d.check_paquito_disk.output) : 'N/A');
-        updateMetric('paquito-dns', d.check_paquito_dns?.success ? '● OK' : '✗ Fail');
-    }
-
-    // Ollama status
-    const ollama = await apiGet('/api/ollama/status');
-    updateMetric('ollama', ollama.online ? '● Online' : '✗ Offline');
+    // Paquito
+    updateStatus('metric-paquito-status', data.paquito?.status);
     const badge = $('#openclaw-badge');
-    // OpenClaw status
-    const oc = await apiGet('/api/openclaw/status');
     if (badge) {
-        badge.textContent = oc.running ? 'RUNNING' : 'STOPPED';
-        badge.className = `panel-badge ${oc.running ? 'badge-online' : 'badge-offline'}`;
+        badge.textContent = data.paquito?.status || 'ERROR';
+        badge.className = `panel-badge ${data.paquito?.status === 'ONLINE' ? 'badge-online' : 'badge-offline'}`;
     }
+    updateStatus('metric-paquito-ram', data.paquito?.ram);
+    updateStatus('metric-paquito-disk', data.paquito?.disk);
+    updateStatus('metric-paquito-dns', data.paquito?.dns);
+
+    // Proxmox
+    updateStatus('metric-proxmox-vms', data.proxmox?.vms);
+    updateStatus('metric-proxmox-storage', data.proxmox?.storage);
 }
 
-// ── Parsers ──
-function parseRAM(output) {
-    const lines = output.split('\n');
-    const mem = lines.find(l => l.startsWith('Mem:'));
-    if (!mem) return output.substring(0, 20);
-    const parts = mem.split(/\s+/);
-    return `${parts[2]} / ${parts[1]}`;
-}
-
-function parseDisk(output) {
-    const lines = output.split('\n');
-    const root = lines.find(l => l.includes(' /$') || l.endsWith('/'));
-    if (!root) return 'Ver consola';
-    const parts = root.split(/\s+/);
-    return parts[4] || parts[3] || 'Ver consola';
-}
-
-function parseCT(output) {
-    const lines = output.trim().split('\n').filter(l => l.trim());
-    return `${Math.max(0, lines.length - 1)} CTs`;
-}
-
-function formatUptime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+function updateStatus(id, value) {
+    const el = document.getElementById(id);
+    if (!el || !value) return;
+    
+    el.classList.remove('loading');
+    
+    if (value === 'ONLINE' || value === 'OK') {
+        el.innerHTML = `🟢 ${value}`;
+    } else if (value === 'OFFLINE' || value === 'FAIL') {
+        el.innerHTML = `🔴 ${value}`;
+    } else if (value === 'ERROR') {
+        el.innerHTML = `🟡 ERROR`;
+    } else {
+        el.innerHTML = value;
+    }
 }
 
 // ── OpenClaw Controls ──
 async function ocStatus() { await runAction('check_paquito_status'); }
 async function ocRestart() {
     if (!confirm('¿Reiniciar OpenClaw de forma remota en CT 103?')) return;
-    await runAction('restart_openclaw');
-    setTimeout(refreshMetrics, 3000);
+    await runAction('restart_paquito_gateway');
+    setTimeout(fetchOverview, 3000);
 }
 async function ocLogs() { await runAction('logs_openclaw'); }
 
@@ -208,8 +180,8 @@ function addChatMsg(text, role) {
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
     consoleClear();
-    refreshMetrics();
-    setInterval(refreshMetrics, 30000);
+    fetchOverview();
+    setInterval(fetchOverview, 10000);
 
     $('#chat-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }

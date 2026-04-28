@@ -235,23 +235,23 @@ async function sendChat() {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>';
 
-    const data = await apiPost('/api/ollama/chat', { message, history: chatHistory.slice(-10) });
+    const data = await apiPost('/api/terminal', { message });
 
     btn.disabled = false;
     btn.textContent = 'Enviar';
 
     if (data.success) {
-        if (data.type === 'action') {
-            addChatMsg(`⚡ Ejecutado: ${data.action}`, 'system');
-            consoleLog(`$ ${data.action}`, 'prompt');
-            consoleLog(data.output || data.error || 'Sin output');
-            chatHistory.push({ role: 'assistant', content: `Ejecuté: ${data.action}` });
-        } else {
-            addChatMsg(data.response, 'assistant');
-            chatHistory.push({ role: 'assistant', content: data.response });
-        }
+        const modeLabel = data.mode === 'rules' ? '⚡ Reglas rápidas' : '🧠 llama.cpp';
+        addChatMsg(`✅ Acción: ${data.action}\nModo: ${modeLabel}`, 'system');
+        addChatMsg(data.output || 'Sin output', 'assistant');
+        consoleLog(`$ ${data.action} [${data.mode}]`, 'prompt');
+        consoleLog(data.output || 'Sin output');
+        chatHistory.push({ role: 'assistant', content: `Ejecuté: ${data.action}` });
     } else {
-        addChatMsg('⚠ ' + (data.error || 'Error de conexión con Ollama'), 'system');
+        const errorMsg = data.error || 'Error procesando el comando';
+        const modeLabel = data.mode ? (data.mode === 'rules' ? '⚡ Reglas' : '🧠 llama.cpp') : '';
+        addChatMsg(`⚠ ${errorMsg}${modeLabel ? '\nModo: ' + modeLabel : ''}`, 'system');
+        consoleLog(`Error: ${errorMsg}`, 'error');
     }
 }
 

@@ -20,10 +20,12 @@ app.use(express.static(path.join(__dirname, '..', 'app')));
 const actionRoutes = require('./routes/action');
 const openclawRoutes = require('./routes/openclaw');
 const ollamaRoutes = require('./routes/ollama');
+const terminalRoutes = require('./routes/terminal');
 
 app.use('/api/action', actionRoutes);
 app.use('/api/openclaw', openclawRoutes);
 app.use('/api/ollama', ollamaRoutes);
+app.use('/api/terminal', terminalRoutes);
 
 // Health check endpoint
 app.get('/api/status', (req, res) => {

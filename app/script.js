@@ -222,6 +222,12 @@ async function ocRestart() {
 async function ocLogs() { await runAction('check_paquito_logs'); }
 
 // ── AI Chat ──
+function speedLabel(data) {
+    if (data.mode === 'rules') return '⚡ FAST MODE';
+    if (data.elapsed_ms && data.elapsed_ms < 2000) return '⚡ FAST MODE';
+    return '🧠 LOCAL AI';
+}
+
 async function sendChat() {
     const input = $('#chat-input');
     const message = input.value.trim();
@@ -240,14 +246,17 @@ async function sendChat() {
     btn.disabled = false;
     btn.textContent = 'Enviar';
 
+    const speed = speedLabel(data);
+    const timeStr = data.elapsed_ms ? ` (${data.elapsed_ms}ms)` : '';
+
     if (data.success && data.type === 'chat') {
         // Conversational response
         addChatMsg(data.response, 'assistant');
+        addChatMsg(`${speed}${timeStr}`, 'system');
         chatHistory.push({ role: 'assistant', content: data.response });
     } else if (data.success && data.type === 'action') {
         // Action executed
-        const modeLabel = data.mode === 'rules' ? '⚡ Reglas rápidas' : '🧠 llama.cpp';
-        addChatMsg(`✅ Acción: ${data.action}\nModo: ${modeLabel}`, 'system');
+        addChatMsg(`✅ ${data.action} → ${speed}${timeStr}`, 'system');
         addChatMsg(data.output || 'Sin output', 'assistant');
         consoleLog(`$ ${data.action} [${data.mode}]`, 'prompt');
         consoleLog(data.output || 'Sin output');

@@ -155,7 +155,7 @@ async function processTerminal(message) {
             }
         } catch (err) {
             if (err.message === 'TIMEOUT') {
-                return { type: 'error', mode: 'llama.cpp', error: 'La IA local ha tardado demasiado. Prueba con un comando más directo.' };
+                return { type: 'error', mode: 'llama.cpp', error: 'La IA local está ocupada. Usa un comando directo.' };
             }
         }
 

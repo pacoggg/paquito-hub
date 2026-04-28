@@ -1,6 +1,7 @@
 // ============================================================
 // Paquito Hub — Terminal Route
 // POST /api/terminal — Dual-mode: actions + conversational chat
+// Includes elapsed_ms for frontend speed indicators
 // ============================================================
 
 const express = require('express');
@@ -18,8 +19,11 @@ router.post('/', async (req, res) => {
         });
     }
 
+    const startTime = Date.now();
+
     try {
         const result = await processTerminal(message.trim());
+        const classifyMs = Date.now() - startTime;
 
         // ── Chat mode: return conversational response ──
         if (result.type === 'chat') {
@@ -28,6 +32,7 @@ router.post('/', async (req, res) => {
                 type: 'chat',
                 mode: result.mode,
                 response: result.response,
+                elapsed_ms: classifyMs,
                 timestamp: new Date().toISOString()
             });
         }
@@ -39,6 +44,7 @@ router.post('/', async (req, res) => {
                 type: 'error',
                 mode: result.mode,
                 error: result.error,
+                elapsed_ms: classifyMs,
                 timestamp: new Date().toISOString()
             });
         }
@@ -46,21 +52,25 @@ router.post('/', async (req, res) => {
         // ── Action mode: execute whitelisted action ──
         try {
             const output = await runAction(result.action);
+            const totalMs = Date.now() - startTime;
             return res.json({
                 success: true,
                 type: 'action',
                 mode: result.mode,
                 action: result.action,
                 output: output,
+                elapsed_ms: totalMs,
                 timestamp: new Date().toISOString()
             });
         } catch (execError) {
+            const totalMs = Date.now() - startTime;
             return res.json({
                 success: false,
                 type: 'action',
                 mode: result.mode,
                 action: result.action,
                 error: String(execError),
+                elapsed_ms: totalMs,
                 timestamp: new Date().toISOString()
             });
         }
@@ -70,6 +80,7 @@ router.post('/', async (req, res) => {
         return res.status(500).json({
             success: false,
             error: 'Error interno procesando el mensaje.',
+            elapsed_ms: Date.now() - startTime,
             timestamp: new Date().toISOString()
         });
     }

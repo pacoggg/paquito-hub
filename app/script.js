@@ -177,8 +177,14 @@ async function fetchOverview() {
     updateStatus('metric-paquito-status', data.paquito?.status);
     const badge = $('#openclaw-badge');
     if (badge) {
-        badge.textContent = data.paquito?.status || 'ERROR';
-        badge.className = `panel-badge ${data.paquito?.status === 'ONLINE' ? 'badge-online' : 'badge-offline'}`;
+        const status = data.paquito?.status || 'ERROR';
+        badge.textContent = status;
+        
+        let badgeClass = 'badge-offline'; // Default: Rojo
+        if (status === 'ONLINE') badgeClass = 'badge-online'; // Verde
+        else if (status === 'TIMEOUT') badgeClass = 'badge-loading'; // Amarillo
+        
+        badge.className = `panel-badge ${badgeClass}`;
     }
     updateStatus('metric-paquito-ram', data.paquito?.ram);
     updateStatus('metric-paquito-disk', data.paquito?.disk);

@@ -240,7 +240,12 @@ async function sendChat() {
     btn.disabled = false;
     btn.textContent = 'Enviar';
 
-    if (data.success) {
+    if (data.success && data.type === 'chat') {
+        // Conversational response
+        addChatMsg(data.response, 'assistant');
+        chatHistory.push({ role: 'assistant', content: data.response });
+    } else if (data.success && data.type === 'action') {
+        // Action executed
         const modeLabel = data.mode === 'rules' ? '⚡ Reglas rápidas' : '🧠 llama.cpp';
         addChatMsg(`✅ Acción: ${data.action}\nModo: ${modeLabel}`, 'system');
         addChatMsg(data.output || 'Sin output', 'assistant');
@@ -248,9 +253,9 @@ async function sendChat() {
         consoleLog(data.output || 'Sin output');
         chatHistory.push({ role: 'assistant', content: `Ejecuté: ${data.action}` });
     } else {
-        const errorMsg = data.error || 'Error procesando el comando';
-        const modeLabel = data.mode ? (data.mode === 'rules' ? '⚡ Reglas' : '🧠 llama.cpp') : '';
-        addChatMsg(`⚠ ${errorMsg}${modeLabel ? '\nModo: ' + modeLabel : ''}`, 'system');
+        // Error
+        const errorMsg = data.error || 'Error procesando el mensaje';
+        addChatMsg(`⚠ ${errorMsg}`, 'system');
         consoleLog(`Error: ${errorMsg}`, 'error');
     }
 }

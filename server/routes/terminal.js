@@ -1,11 +1,11 @@
 // ============================================================
 // Paquito Hub — Terminal Route
-// POST /api/terminal — Hybrid classifier + executor
+// POST /api/terminal — Dual-mode: actions + conversational chat
 // ============================================================
 
 const express = require('express');
 const router = express.Router();
-const { classifyTerminal } = require('../services/terminal');
+const { processTerminal } = require('../services/terminal');
 const { runAction } = require('../services/executor');
 
 router.post('/', async (req, res) => {
@@ -19,34 +19,47 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        const classification = await classifyTerminal(message.trim());
+        const result = await processTerminal(message.trim());
 
-        // No action found
-        if (!classification.action) {
+        // ── Chat mode: return conversational response ──
+        if (result.type === 'chat') {
             return res.json({
-                success: false,
-                mode: classification.mode,
-                action: null,
-                error: classification.error || 'No he entendido el comando.',
+                success: true,
+                type: 'chat',
+                mode: result.mode,
+                response: result.response,
                 timestamp: new Date().toISOString()
             });
         }
 
-        // Execute whitelisted action
+        // ── Error from classifier ──
+        if (result.type === 'error') {
+            return res.json({
+                success: false,
+                type: 'error',
+                mode: result.mode,
+                error: result.error,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // ── Action mode: execute whitelisted action ──
         try {
-            const output = await runAction(classification.action);
+            const output = await runAction(result.action);
             return res.json({
                 success: true,
-                mode: classification.mode,
-                action: classification.action,
+                type: 'action',
+                mode: result.mode,
+                action: result.action,
                 output: output,
                 timestamp: new Date().toISOString()
             });
         } catch (execError) {
             return res.json({
                 success: false,
-                mode: classification.mode,
-                action: classification.action,
+                type: 'action',
+                mode: result.mode,
+                action: result.action,
                 error: String(execError),
                 timestamp: new Date().toISOString()
             });
@@ -56,7 +69,7 @@ router.post('/', async (req, res) => {
         console.error('[Terminal Route] Error:', error);
         return res.status(500).json({
             success: false,
-            error: 'Error interno procesando el comando.',
+            error: 'Error interno procesando el mensaje.',
             timestamp: new Date().toISOString()
         });
     }

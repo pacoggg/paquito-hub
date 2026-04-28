@@ -172,6 +172,13 @@ body::before {
     display: flex; flex-direction: column;
 }
 
+#terminal-panel {
+    min-height: 220px;
+    max-height: 420px;
+    overflow: hidden;
+    transition: min-height 0.3s ease, max-height 0.3s ease;
+}
+
 .panel-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 20px;
@@ -230,8 +237,10 @@ body::before {
 
 /* ── AI Chat ── */
 .chat-messages {
-    max-height: 90px;
+    min-height: 120px;
+    max-height: 320px;
     overflow-y: auto;
+    transition: min-height 0.3s ease, max-height 0.3s ease;
     display: flex; flex-direction: column; gap: 8px;
     margin-bottom: 8px;
     padding-right: 6px;
@@ -369,6 +378,7 @@ body::before {
     .header { flex-direction: column; gap: 10px; text-align: center; padding: 14px; }
     .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .control-grid { grid-template-columns: 1fr; }
+    .chat-messages { max-height: 300px; }
 }
 
 /* ── Section Titles ── */
@@ -409,7 +419,6 @@ body::before {
 .compact-mode .control-grid { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; gap: 8px; }
 .compact-mode .control-btn { padding: 6px 10px; font-size: 0.7rem; flex: 1; text-align: center; }
 
-.compact-mode .chat-messages { max-height: 90px; }
 .compact-mode .chat-msg { padding: 6px 10px; font-size: 0.75rem; }
 .compact-mode .chat-input { padding: 6px 10px; font-size: 0.75rem; }
 .compact-mode .chat-send { padding: 6px 12px; font-size: 0.75rem; }

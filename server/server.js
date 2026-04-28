@@ -42,7 +42,7 @@ const { runAction } = require('./services/executor');
 app.get('/api/system-info', async (req, res) => {
     const results = {};
 
-    const checks = ['check_ram', 'check_disk', 'check_dns', 'check_containers', 'check_ollama'];
+    const checks = ['check_hub_ram', 'check_hub_disk', 'check_dns', 'check_paquito_status', 'check_paquito_ram', 'check_paquito_disk', 'check_paquito_dns', 'check_ollama'];
 
     await Promise.allSettled(
         checks.map(async (check) => {

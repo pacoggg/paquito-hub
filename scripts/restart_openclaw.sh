@@ -1,3 +1,2 @@
 #!/bin/bash
-systemctl restart openclaw
-echo "OpenClaw reiniciado"
+ssh root@192.168.1.146 "pkill -f 'openclaw gateway' || true; sleep 2; nohup openclaw gateway >/tmp/openclaw/gateway-manual.log 2>&1 & echo 'OpenClaw gateway relanzado'"

@@ -28,37 +28,53 @@
             </div>
         </header>
 
-        <!-- ── Metrics ── -->
+        <!-- ── Metrics CT 102 ── -->
+        <h3 style="margin-bottom: 15px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🖥️ HUB SERVER (CT 102)</h3>
         <section class="metrics-grid">
-            <div class="metric-card" onclick="checkRAM()">
+            <div class="metric-card" onclick="runAction('check_hub_ram')">
                 <div class="metric-icon">💾</div>
-                <div class="metric-label">RAM</div>
+                <div class="metric-label">RAM Hub</div>
                 <div class="metric-value loading" id="metric-ram">...</div>
             </div>
-            <div class="metric-card" onclick="checkDisk()">
+            <div class="metric-card" onclick="runAction('check_hub_disk')">
                 <div class="metric-icon">💿</div>
-                <div class="metric-label">Disco</div>
+                <div class="metric-label">Disco Hub</div>
                 <div class="metric-value loading" id="metric-disk">...</div>
             </div>
-            <div class="metric-card" onclick="checkDNS()">
+            <div class="metric-card" onclick="runAction('check_dns')">
                 <div class="metric-icon">🌐</div>
-                <div class="metric-label">DNS</div>
+                <div class="metric-label">DNS Hub</div>
                 <div class="metric-value loading" id="metric-dns">...</div>
-            </div>
-            <div class="metric-card" onclick="checkContainers()">
-                <div class="metric-icon">🐳</div>
-                <div class="metric-label">Containers</div>
-                <div class="metric-value loading" id="metric-containers">...</div>
             </div>
             <div class="metric-card">
                 <div class="metric-icon">🤖</div>
                 <div class="metric-label">Ollama</div>
                 <div class="metric-value loading" id="metric-ollama">...</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-icon">⏱️</div>
-                <div class="metric-label">Uptime</div>
-                <div class="metric-value loading" id="metric-uptime">...</div>
+        </section>
+
+        <!-- ── Metrics CT 103 ── -->
+        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🧠 PAQUITO (CT 103 - SSH)</h3>
+        <section class="metrics-grid">
+            <div class="metric-card" onclick="runAction('check_paquito_status')">
+                <div class="metric-icon">🔌</div>
+                <div class="metric-label">Estado OpenClaw</div>
+                <div class="metric-value loading" id="metric-paquito-status">...</div>
+            </div>
+            <div class="metric-card" onclick="runAction('check_paquito_ram')">
+                <div class="metric-icon">💾</div>
+                <div class="metric-label">RAM Paquito</div>
+                <div class="metric-value loading" id="metric-paquito-ram">...</div>
+            </div>
+            <div class="metric-card" onclick="runAction('check_paquito_disk')">
+                <div class="metric-icon">💿</div>
+                <div class="metric-label">Disco Paquito</div>
+                <div class="metric-value loading" id="metric-paquito-disk">...</div>
+            </div>
+            <div class="metric-card" onclick="runAction('check_paquito_dns')">
+                <div class="metric-icon">🌐</div>
+                <div class="metric-label">DNS Paquito</div>
+                <div class="metric-value loading" id="metric-paquito-dns">...</div>
             </div>
         </section>
 
@@ -73,12 +89,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="control-grid">
-                        <button class="control-btn primary" onclick="ocStatus()" id="btn-oc-status">📊 Estado</button>
-                        <button class="control-btn danger" onclick="ocRestart()" id="btn-oc-restart">🔄 Reiniciar</button>
-                        <button class="control-btn primary" onclick="ocLogs()" id="btn-oc-logs">📜 Logs</button>
-                        <button class="control-btn primary" onclick="checkDNS()" id="btn-check-dns">🌐 DNS</button>
-                        <button class="control-btn primary" onclick="checkRAM()" id="btn-check-ram">💾 RAM</button>
-                        <button class="control-btn primary" onclick="checkDisk()" id="btn-check-disk">💿 Disco</button>
+                        <button class="control-btn danger" onclick="ocRestart()" id="btn-oc-restart">🔄 Reiniciar OpenClaw</button>
+                        <button class="control-btn primary" onclick="ocLogs()" id="btn-oc-logs">📜 Ver Logs (SSH)</button>
+                        <button class="control-btn primary" onclick="runAction('check_paquito_status')" id="btn-oc-status">📊 Estado Remoto</button>
                     </div>
                 </div>
             </div>

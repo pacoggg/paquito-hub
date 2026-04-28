@@ -1,15 +1,17 @@
-version: "3.8"
 services:
   hub:
+    container_name: paquito-hub
     image: node:20
     working_dir: /app
     volumes:
       - .:/app
+      - ./ssh/id_ed25519:/root/.ssh/id_ed25519:ro
+      - ./ssh/known_hosts:/root/.ssh/known_hosts:ro
     command: sh -c "npm install && node server/server.js"
     ports:
       - "3000:3000"
     restart: always
     environment:
       - PORT=3000
-      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_URL=http://192.168.1.146:11434
       - OLLAMA_MODEL=phi3

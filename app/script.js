@@ -102,10 +102,15 @@ async function refreshMetrics() {
     const sys = await apiGet('/api/system-info');
     if (sys.success) {
         const d = sys.data;
-        updateMetric('ram', d.check_ram?.success ? parseRAM(d.check_ram.output) : 'N/A');
-        updateMetric('disk', d.check_disk?.success ? parseDisk(d.check_disk.output) : 'N/A');
+        updateMetric('ram', d.check_hub_ram?.success ? parseRAM(d.check_hub_ram.output) : 'N/A');
+        updateMetric('disk', d.check_hub_disk?.success ? parseDisk(d.check_hub_disk.output) : 'N/A');
         updateMetric('dns', d.check_dns?.success ? '● OK' : '✗ Fail');
-        updateMetric('containers', d.check_containers?.success ? parseCT(d.check_containers.output) : 'N/A');
+        
+        // Paquito CT 103 status (shows if openclaw is running)
+        updateMetric('paquito-status', d.check_paquito_status?.success ? '🔌 ONLINE' : '🔌 OFFLINE');
+        updateMetric('paquito-ram', d.check_paquito_ram?.success ? parseRAM(d.check_paquito_ram.output) : 'N/A');
+        updateMetric('paquito-disk', d.check_paquito_disk?.success ? parseDisk(d.check_paquito_disk.output) : 'N/A');
+        updateMetric('paquito-dns', d.check_paquito_dns?.success ? '● OK' : '✗ Fail');
     }
 
     // Ollama status
@@ -149,17 +154,13 @@ function formatUptime(seconds) {
 }
 
 // ── OpenClaw Controls ──
-async function ocStatus() { await runAction('check_openclaw'); }
+async function ocStatus() { await runAction('check_paquito_status'); }
 async function ocRestart() {
-    if (!confirm('¿Reiniciar OpenClaw?')) return;
+    if (!confirm('¿Reiniciar OpenClaw de forma remota en CT 103?')) return;
     await runAction('restart_openclaw');
     setTimeout(refreshMetrics, 3000);
 }
 async function ocLogs() { await runAction('logs_openclaw'); }
-async function checkDNS() { await runAction('check_dns'); }
-async function checkDisk() { await runAction('check_disk'); }
-async function checkRAM() { await runAction('check_ram'); }
-async function checkContainers() { await runAction('check_containers'); }
 
 // ── AI Chat ──
 async function sendChat() {

@@ -8,13 +8,16 @@ const path = require('path');
 const config = require('../config');
 
 const actions = {
-    check_openclaw: 'check_openclaw.sh',
-    restart_openclaw: 'restart_openclaw.sh',
-    logs_openclaw: 'logs_openclaw.sh',
+    check_hub_ram: 'check_hub_ram.sh',
+    check_hub_disk: 'check_hub_disk.sh',
     check_dns: 'check_dns.sh',
-    check_containers: 'check_containers.sh',
-    check_disk: 'check_disk.sh',
-    check_ram: 'check_ram.sh',
+    check_openclaw: 'check_openclaw.sh',
+    logs_openclaw: 'logs_openclaw.sh',
+    restart_openclaw: 'restart_openclaw.sh',
+    check_paquito_status: 'check_paquito_status.sh',
+    check_paquito_ram: 'check_paquito_ram.sh',
+    check_paquito_disk: 'check_paquito_disk.sh',
+    check_paquito_dns: 'check_paquito_dns.sh',
     check_ollama: 'check_ollama.sh'
 };
 

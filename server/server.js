@@ -66,10 +66,7 @@ app.get('/api/system-info', async (req, res) => {
     });
 });
 
-// Fallback to index.html for SPA
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'app', 'index.html'));
-});
+// SPA fallback removed from here, moved to the bottom
 
 // Parsers
 function parseRAM(out) {
@@ -132,6 +129,7 @@ app.get('/api/overview', async (req, res) => {
     );
 
     res.json({
+        status: "ok",
         hub: {
             ram: parseRAM(results['check_hub_ram']),
             disk: parseDisk(results['check_hub_disk']),
@@ -145,9 +143,18 @@ app.get('/api/overview', async (req, res) => {
         },
         proxmox: {
             vms: parseProxmoxVMs(results['check_proxmox_vms']),
-            storage: parseDisk(results['check_proxmox_storage']) // Reuses disk parser for PVE root
-        }
+            storage: parseDisk(results['check_proxmox_storage'])
+        },
+        timestamp: new Date().toISOString()
     });
+});
+
+// Fallback for SPA and unmatched API routes
+app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(__dirname, '..', 'app', 'index.html'));
 });
 
 // Start server

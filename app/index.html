@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
-<body>
+<body class="compact-mode">
     <div class="toast-container" id="toast-container"></div>
 
     <div class="app-container">
@@ -29,8 +29,8 @@
         </header>
 
         <!-- ── Metrics CT 102 ── -->
-        <h3 style="margin-bottom: 15px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🖥️ HUB SERVER (CT 102)</h3>
-        <section class="metrics-grid">
+        <h3 class="section-title">🖥️ HUB SERVER (CT 102)</h3>
+        <section class="metrics-grid hub-grid">
             <div class="metric-card" onclick="runAction('check_hub_ram')">
                 <div class="metric-icon">💾</div>
                 <div class="metric-label">RAM Hub</div>
@@ -49,8 +49,8 @@
         </section>
 
         <!-- ── Metrics CT 103 ── -->
-        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🧠 PAQUITO (CT 103)</h3>
-        <section class="metrics-grid">
+        <h3 class="section-title">🧠 PAQUITO (CT 103)</h3>
+        <section class="metrics-grid paquito-grid">
             <div class="metric-card" onclick="runAction('check_paquito_status')">
                 <div class="metric-icon">🔌</div>
                 <div class="metric-label">Estado OpenClaw</div>
@@ -84,8 +84,8 @@
         </section>
 
         <!-- ── Metrics Proxmox ── -->
-        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🖥️ PROXMOX (Host)</h3>
-        <section class="metrics-grid">
+        <h3 class="section-title">🖥️ PROXMOX (Host)</h3>
+        <section class="metrics-grid proxmox-grid">
             <div class="metric-card" onclick="runAction('check_proxmox_vms')">
                 <div class="metric-icon">📦</div>
                 <div class="metric-label">VMs y CTs</div>
@@ -137,9 +137,12 @@
         <section class="panel console-panel">
             <div class="panel-header">
                 <span class="panel-title">📟 Console Output</span>
-                <button class="control-btn" onclick="consoleClear()" style="padding:6px 14px;font-size:0.72rem;" id="btn-clear-console">Limpiar</button>
+                <div class="header-actions">
+                    <button class="control-btn" onclick="toggleConsole()" style="padding:6px 14px;font-size:0.72rem;margin-right:8px;" id="btn-toggle-console">Ocultar</button>
+                    <button class="control-btn" onclick="consoleClear()" style="padding:6px 14px;font-size:0.72rem;" id="btn-clear-console">Limpiar</button>
+                </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body console-body">
                 <div class="console-output" id="console-output"></div>
             </div>
         </section>

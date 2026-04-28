@@ -361,7 +361,7 @@ body::before {
 /* ── Responsive ── */
 @media (max-width: 900px) {
     .panels-grid { grid-template-columns: 1fr; }
-    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid.paquito-grid, .metrics-grid.hub-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 550px) {
@@ -370,3 +370,67 @@ body::before {
     .metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .control-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Section Titles ── */
+.section-title {
+    margin-bottom: 12px;
+    margin-top: 10px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.hub-grid { margin-top: 0; }
+
+/* ── Compact Mode (Desktop Default) ── */
+.compact-mode .app-container { padding: 10px 20px 20px; }
+.compact-mode .header { padding: 12px 20px; margin-bottom: 16px; height: 64px; }
+.compact-mode .header-logo { font-size: 1.6rem; }
+.compact-mode .header-title { font-size: 1.25rem; }
+.compact-mode .header-subtitle { font-size: 0.65rem; }
+
+.compact-mode .metrics-grid { gap: 12px; margin-bottom: 16px; }
+@media (min-width: 1200px) {
+    .compact-mode .hub-grid { grid-template-columns: repeat(3, 1fr); }
+    .compact-mode .paquito-grid { grid-template-columns: repeat(6, 1fr); }
+    .compact-mode .proxmox-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.compact-mode .metric-card { padding: 14px; min-height: 86px; }
+.compact-mode .metric-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.compact-mode .metric-label { font-size: 0.7rem; margin-bottom: 4px; }
+.compact-mode .metric-value { font-size: 1rem; }
+
+.compact-mode .panels-grid { gap: 16px; margin-bottom: 16px; }
+.compact-mode .panel-header { padding: 12px 16px; }
+.compact-mode .panel-body { padding: 14px 16px; }
+
+.compact-mode .chat-messages { height: 140px; }
+.compact-mode .chat-msg { padding: 8px 12px; font-size: 0.8rem; }
+.compact-mode .chat-input { padding: 8px 12px; }
+.compact-mode .chat-send { padding: 8px 16px; }
+.compact-mode .control-btn { padding: 8px 12px; font-size: 0.75rem; }
+
+/* ── Console Collapsible ── */
+.console-output {
+    max-height: 160px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease, min-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
+}
+
+.console-output.collapsed {
+    max-height: 0;
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    opacity: 0;
+    border: none;
+    overflow: hidden;
+}
+
+.header-actions { display: flex; align-items: center; }
+.console-body { transition: padding 0.3s ease; }
+.console-body.collapsed { padding: 0; }
+

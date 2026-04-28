@@ -34,6 +34,24 @@ function consoleClear() {
     $('#console-output').innerHTML = '<span class="info">Consola lista. Ejecuta una acción para ver resultados.\n</span>';
 }
 
+function toggleConsole() {
+    const consoleOut = $('#console-output');
+    const consoleBody = $('.console-body');
+    const btn = $('#btn-toggle-console');
+    
+    if (consoleOut.classList.contains('collapsed')) {
+        consoleOut.classList.remove('collapsed');
+        if(consoleBody) consoleBody.classList.remove('collapsed');
+        btn.textContent = 'Ocultar';
+        localStorage.setItem('paquito-console', 'open');
+    } else {
+        consoleOut.classList.add('collapsed');
+        if(consoleBody) consoleBody.classList.add('collapsed');
+        btn.textContent = 'Mostrar';
+        localStorage.setItem('paquito-console', 'closed');
+    }
+}
+
 // ── API Calls ──
 async function apiGet(endpoint) {
     try {
@@ -180,6 +198,15 @@ function addChatMsg(text, role) {
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
     consoleClear();
+    
+    // Restore console state or default to collapsed on mobile
+    const consoleState = localStorage.getItem('paquito-console');
+    if (consoleState === 'closed' || (window.innerWidth <= 600 && !consoleState)) {
+        $('#console-output').classList.add('collapsed');
+        if ($('.console-body')) $('.console-body').classList.add('collapsed');
+        $('#btn-toggle-console').textContent = 'Mostrar';
+    }
+
     fetchOverview();
     setInterval(fetchOverview, 10000);
 

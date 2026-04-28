@@ -113,6 +113,8 @@
                 </div>
             </div>
         </aside>
+        
+        <div class="column-resizer" id="column-resizer"></div>
 
         <!-- ── Right Column: Work Column (Tabs) ── -->
         <main class="right-work-column">
@@ -121,7 +123,10 @@
                     <button class="tab-btn active" id="tab-btn-terminal" onclick="switchTab('terminal')">🤖 Terminal IA</button>
                     <button class="tab-btn" id="tab-btn-console" onclick="switchTab('console')">📟 Console Output</button>
                 </div>
-                <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Pantalla Completa">⛶</button>
+                <div class="tabs-actions">
+                    <button class="fullscreen-btn" onclick="resetLayout()" title="Restablecer Diseño" style="font-size: 1rem; margin-right: 4px;">↺</button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Pantalla Completa">⛶</button>
+                </div>
             </nav>
 
             <div id="tab-content-terminal" class="tab-content active">

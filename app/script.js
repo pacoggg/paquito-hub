@@ -61,6 +61,60 @@ function toggleFullscreen() {
     }
 }
 
+// ── Layout Resizer ──
+function initResizer() {
+    const resizer = $('#column-resizer');
+    if (!resizer) return;
+
+    let isDragging = false;
+
+    // Load saved width
+    const savedWidth = localStorage.getItem('paquito-left-width');
+    if (savedWidth && window.innerWidth > 900) {
+        document.documentElement.style.setProperty('--left-width', savedWidth);
+    }
+
+    resizer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        resizer.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        let percentage = (e.clientX / window.innerWidth) * 100;
+        
+        // Limits
+        if (percentage < 32) percentage = 32;
+        if (percentage > 68) percentage = 68;
+
+        const value = percentage + '%';
+        document.documentElement.style.setProperty('--left-width', value);
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        resizer.classList.remove('dragging');
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+
+        const finalWidth = document.documentElement.style.getPropertyValue('--left-width');
+        if (finalWidth) {
+            localStorage.setItem('paquito-left-width', finalWidth);
+        }
+    });
+}
+
+function resetLayout() {
+    if (!confirm('¿Restablecer el diseño original (50/50)?')) return;
+    localStorage.removeItem('paquito-left-width');
+    document.documentElement.style.setProperty('--left-width', '50%');
+    toast('✓ Diseño restablecido', 'success');
+}
+
 // ── API Calls ──
 async function apiGet(endpoint) {
     try {
@@ -208,6 +262,9 @@ function addChatMsg(text, role) {
 // ── Init ──
 document.addEventListener('DOMContentLoaded', () => {
     consoleClear();
+    
+    // Layout
+    initResizer();
     
     // Restore tab state
     const activeTab = localStorage.getItem('paquito-active-tab') || 'terminal';

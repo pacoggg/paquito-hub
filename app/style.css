@@ -30,7 +30,7 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 15px; scroll-behavior: smooth; overflow: hidden; }
+html { font-size: 15px; scroll-behavior: smooth; overflow: hidden; --left-width: 50%; }
 
 body {
     font-family: 'Inter', -apple-system, sans-serif;
@@ -62,7 +62,7 @@ body::before {
 .main-dashboard {
     position: relative; z-index: 1;
     display: grid;
-    grid-template-columns: 38% 62%;
+    grid-template-columns: var(--left-width, 50%) 6px 1fr;
     height: 100vh;
     overflow: hidden;
 }
@@ -70,9 +70,34 @@ body::before {
 .left-control-column {
     padding: 16px 20px;
     overflow-y: auto;
-    border-right: 1px solid var(--glass-border);
+    border-right: none;
     scrollbar-width: thin;
     scrollbar-color: var(--glass-border) transparent;
+    min-width: 320px;
+}
+
+.column-resizer {
+    background: transparent;
+    cursor: col-resize;
+    transition: background 0.2s;
+    position: relative;
+    z-index: 10;
+}
+
+.column-resizer:hover, .column-resizer.dragging {
+    background: var(--accent-cyan);
+    opacity: 0.4;
+}
+
+.column-resizer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--glass-border);
+    transform: translateX(-50%);
 }
 
 .right-work-column {
@@ -81,6 +106,7 @@ body::before {
     height: 100vh;
     padding: 16px;
     background: rgba(0, 0, 0, 0.2);
+    min-width: 420px;
 }
 
 /* ── Header ── */
@@ -138,7 +164,7 @@ body::before {
     backdrop-filter: blur(16px);
 }
 
-.tabs-buttons { display: flex; gap: 6px; }
+.tabs-buttons, .tabs-actions { display: flex; gap: 6px; align-items: center; }
 
 .tab-btn {
     font-family: 'Inter', sans-serif;
@@ -340,13 +366,15 @@ body::before {
 /* ── Responsive ── */
 @media (max-width: 1100px) {
     .main-dashboard { grid-template-columns: 1fr; height: auto; overflow-y: auto; }
-    .left-control-column, .right-work-column { height: auto; overflow: visible; border-right: none; }
+    .column-resizer { display: none; }
+    .left-control-column, .right-work-column { height: auto; overflow: visible; border-right: none; min-width: 0; }
     .right-work-column { min-height: 600px; }
     .chat-messages, .console-output { height: 400px; flex: none; }
     .tab-content.active { height: 500px; }
 }
 
 @media (max-width: 700px) {
+    .main-dashboard { transform: none !important; }
     .metrics-grid { grid-template-columns: 1fr; }
     .paquito-grid { grid-template-columns: repeat(2, 1fr); }
     .header { flex-direction: column; text-align: center; gap: 10px; }

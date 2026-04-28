@@ -35,11 +35,40 @@ function runAction(action) {
 
         const scriptPath = path.resolve(config.scriptsDir, actions[action]);
 
+        console.log(`[Executor] Running: ${action} -> ${scriptPath}`);
+
         exec(`bash ${scriptPath}`, { timeout: 15000 }, (err, stdout, stderr) => {
-            if (err) {
-                return reject(stderr || err.message);
+            const out = (stdout || '').trim();
+            const errOut = (stderr || '').trim();
+            const exitCode = err ? err.code || 1 : 0;
+
+            console.log(`[Executor] ${action} exit=${exitCode} stdout=${out.length}B stderr=${errOut.length}B`);
+
+            if (errOut) {
+                console.log(`[Executor] ${action} stderr: ${errOut.substring(0, 500)}`);
             }
-            resolve(stdout.trim());
+
+            // If we got useful stdout, treat as success even if exit code is non-zero
+            // (SSH commands often write warnings to stderr but still produce output)
+            if (out) {
+                resolve(out);
+                return;
+            }
+
+            // No stdout at all — check if it's a real failure
+            if (err) {
+                const fullError = [
+                    `Script: ${actions[action]}`,
+                    `Exit code: ${exitCode}`,
+                    errOut ? `Error: ${errOut}` : `Error: ${err.message}`
+                ].join('\n');
+
+                console.error(`[Executor] ${action} FAILED:\n${fullError}`);
+                return reject(fullError);
+            }
+
+            // Exit 0, no stdout — return empty
+            resolve('(sin output)');
         });
     });
 }

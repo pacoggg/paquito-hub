@@ -12,7 +12,9 @@ services:
         apt-get update -qq && apt-get install -y -qq openssh-client > /dev/null 2>&1;
         chmod 600 /root/.ssh/id_ed25519;
         chmod 644 /root/.ssh/known_hosts 2>/dev/null || true;
-        chmod +x /app/scripts/*.sh;
+        sh -c 'chmod +x /app/scripts/*.sh';
+        echo '[Startup] Scripts permissions set:';
+        ls -la /app/scripts/*.sh | head -5;
         npm install --silent && node server/server.js
       "
     ports:

@@ -11,7 +11,7 @@ echo "[*] Iniciando despliegue de Paquito Hub..."
 
 # 1. Dar permisos a los scripts
 echo "[*] Dando permisos de ejecución a scripts..."
-chmod +x scripts/*.sh
+sh -c 'chmod +x scripts/*.sh'
 
 # 2. Configurar acceso SSH para el contenedor
 bash scripts/setup_ssh_access.sh

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Paquito Hub — Panel de administración con IA local, control OpenClaw, y monitorización del sistema">
+    <title>🧠 Paquito Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="app-container">
+
+        <!-- ── Header ── -->
+        <header class="header">
+            <div class="header-left">
+                <span class="header-logo">🧠</span>
+                <div>
+                    <div class="header-title">Paquito Hub</div>
+                    <div class="header-subtitle">Control Center</div>
+                </div>
+            </div>
+            <div class="server-status">
+                <span class="status-dot" id="server-dot"></span>
+                <span>Server <strong id="server-label">...</strong></span>
+            </div>
+        </header>
+
+        <!-- ── Metrics ── -->
+        <section class="metrics-grid">
+            <div class="metric-card" onclick="checkRAM()">
+                <div class="metric-icon">💾</div>
+                <div class="metric-label">RAM</div>
+                <div class="metric-value loading" id="metric-ram">...</div>
+            </div>
+            <div class="metric-card" onclick="checkDisk()">
+                <div class="metric-icon">💿</div>
+                <div class="metric-label">Disco</div>
+                <div class="metric-value loading" id="metric-disk">...</div>
+            </div>
+            <div class="metric-card" onclick="checkDNS()">
+                <div class="metric-icon">🌐</div>
+                <div class="metric-label">DNS</div>
+                <div class="metric-value loading" id="metric-dns">...</div>
+            </div>
+            <div class="metric-card" onclick="checkContainers()">
+                <div class="metric-icon">🐳</div>
+                <div class="metric-label">Containers</div>
+                <div class="metric-value loading" id="metric-containers">...</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">🤖</div>
+                <div class="metric-label">Ollama</div>
+                <div class="metric-value loading" id="metric-ollama">...</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">⏱️</div>
+                <div class="metric-label">Uptime</div>
+                <div class="metric-value loading" id="metric-uptime">...</div>
+            </div>
+        </section>
+
+        <!-- ── Main Panels ── -->
+        <section class="panels-grid">
+
+            <!-- OpenClaw Control -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">🔧 OpenClaw Control</span>
+                    <span class="panel-badge badge-loading" id="openclaw-badge">CHECKING</span>
+                </div>
+                <div class="panel-body">
+                    <div class="control-grid">
+                        <button class="control-btn primary" onclick="ocStatus()" id="btn-oc-status">📊 Estado</button>
+                        <button class="control-btn danger" onclick="ocRestart()" id="btn-oc-restart">🔄 Reiniciar</button>
+                        <button class="control-btn primary" onclick="ocLogs()" id="btn-oc-logs">📜 Logs</button>
+                        <button class="control-btn primary" onclick="checkDNS()" id="btn-check-dns">🌐 DNS</button>
+                        <button class="control-btn primary" onclick="checkRAM()" id="btn-check-ram">💾 RAM</button>
+                        <button class="control-btn primary" onclick="checkDisk()" id="btn-check-disk">💿 Disco</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Terminal -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">🤖 Terminal IA</span>
+                    <span class="panel-badge badge-online">PAQUITO</span>
+                </div>
+                <div class="panel-body">
+                    <div class="chat-messages" id="chat-messages"></div>
+                    <div class="chat-input-row">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Escribe un comando o pregunta..." autocomplete="off">
+                        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ── Console Output ── -->
+        <section class="panel console-panel">
+            <div class="panel-header">
+                <span class="panel-title">📟 Console Output</span>
+                <button class="control-btn" onclick="consoleClear()" style="padding:6px 14px;font-size:0.72rem;" id="btn-clear-console">Limpiar</button>
+            </div>
+            <div class="panel-body">
+                <div class="console-output" id="console-output"></div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

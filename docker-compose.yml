@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  hub:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && node server/server.js"
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - PORT=3000
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=phi3

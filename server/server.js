@@ -92,14 +92,40 @@ function parseDNS(out) {
 
 function parsePaquitoStatus(out) {
     if (!out) return "ERROR";
-    return (out.includes("openclaw") && !out.includes("no detectado")) ? "ONLINE" : "OFFLINE";
+    const lower = out.toLowerCase();
+    if (lower.includes("no detectado")) return "OFFLINE";
+    if (lower.match(/openclaw/i)) return "ONLINE";
+    return "OFFLINE";
 }
 
 function parseProxmoxVMs(out) {
     if (!out) return "ERROR";
-    const running = (out.match(/running/g) || []).length;
-    const stopped = (out.match(/stopped/g) || []).length;
-    return `${running} activos / ${stopped} parados`;
+    try {
+        const lower = out.toLowerCase();
+        const lines = lower.split('\n');
+        
+        let ctRunning = 0;
+        let vmRunning = 0;
+        let vmStopped = 0;
+        let isVmSection = false;
+
+        for (const line of lines) {
+            if (line.includes('--- vms qemu ---')) {
+                isVmSection = true;
+                continue;
+            }
+            if (line.includes('running')) {
+                if (isVmSection) vmRunning++;
+                else ctRunning++;
+            } else if (line.includes('stopped')) {
+                if (isVmSection) vmStopped++;
+            }
+        }
+        return `${ctRunning} CT running / ${vmRunning} VM running / ${vmStopped} VM stopped`;
+    } catch (e) {
+        console.error("Error parseando Proxmox VMs:", e);
+        return "ERROR_PARSE";
+    }
 }
 
 function runActionWithTimeout(action, ms = 5000) {
@@ -121,8 +147,9 @@ app.get('/api/overview', async (req, res) => {
     await Promise.allSettled(
         actions.map(async (action) => {
             try {
-                results[action] = await runActionWithTimeout(action, 5000);
+                results[action] = await runActionWithTimeout(action, 8000); // Increased timeout to 8s for SSH
             } catch (err) {
+                console.error(`[Overview] Action ${action} failed:`, err);
                 results[action] = null;
             }
         })

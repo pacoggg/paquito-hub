@@ -6,8 +6,15 @@ services:
     volumes:
       - .:/app
       - ./ssh/id_ed25519:/root/.ssh/id_ed25519:ro
-      - ./ssh/known_hosts:/root/.ssh/known_hosts:ro
-    command: sh -c "npm install && node server/server.js"
+      - ./ssh/known_hosts:/root/.ssh/known_hosts
+    command: >
+      sh -c "
+        apt-get update -qq && apt-get install -y -qq openssh-client > /dev/null 2>&1;
+        chmod 600 /root/.ssh/id_ed25519;
+        chmod 644 /root/.ssh/known_hosts 2>/dev/null || true;
+        chmod +x /app/scripts/*.sh;
+        npm install --silent && node server/server.js
+      "
     ports:
       - "3000:3000"
     restart: always
@@ -15,3 +22,6 @@ services:
       - PORT=3000
       - OLLAMA_URL=http://192.168.1.146:11434
       - OLLAMA_MODEL=phi3
+      - LLM_URL=http://192.168.1.146:8080/v1/chat/completions
+      - LLM_MODEL=qwen2.5-1.5b-instruct
+      - LLM_TIMEOUT_MS=20000

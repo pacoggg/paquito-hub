@@ -27,10 +27,16 @@ sleep 5
 # 4. Verificar conexión SSH desde dentro del contenedor
 echo "[*] Comprobando acceso SSH remoto a CT 103 desde el Hub..."
 if docker exec paquito-hub ssh root@192.168.1.146 "hostname" > /dev/null 2>&1; then
-    echo "[✓] Conexión SSH exitosa (CT 103 responde)"
+    echo "[✓] Conexión SSH a CT 103 exitosa"
 else
     echo "[!] Advertencia: No se pudo conectar por SSH al CT 103."
-    echo "    Asegúrate de haber copiado la clave con ssh-copy-id"
+fi
+
+echo "[*] Comprobando acceso SSH remoto a Proxmox desde el Hub..."
+if docker exec paquito-hub ssh root@192.168.1.135 "hostname" > /dev/null 2>&1; then
+    echo "[✓] Conexión SSH a Proxmox exitosa"
+else
+    echo "[!] Advertencia: No se pudo conectar por SSH a Proxmox."
 fi
 
 # 5. Verificar salud del API
@@ -44,5 +50,4 @@ fi
 echo "============================================================"
 echo "🚀 DESPLIEGUE FINALIZADO"
 echo "============================================================"
-echo "Accede al Hub en: http://localhost:3000"
-echo "Puedes ver los logs con: docker logs -f paquito-hub"
+echo "Paquito Hub desplegado correctamente en http://localhost:3000"

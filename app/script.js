@@ -104,7 +104,7 @@ async function refreshMetrics() {
         const d = sys.data;
         updateMetric('ram', d.check_hub_ram?.success ? parseRAM(d.check_hub_ram.output) : 'N/A');
         updateMetric('disk', d.check_hub_disk?.success ? parseDisk(d.check_hub_disk.output) : 'N/A');
-        updateMetric('dns', d.check_dns?.success ? '● OK' : '✗ Fail');
+        updateMetric('dns', d.check_hub_dns?.success ? '● OK' : '✗ Fail');
         
         // Paquito CT 103 status (shows if openclaw is running)
         updateMetric('paquito-status', d.check_paquito_status?.success ? '🔌 ONLINE' : '🔌 OFFLINE');

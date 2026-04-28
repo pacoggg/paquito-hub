@@ -41,25 +41,30 @@
                 <div class="metric-label">Disco Hub</div>
                 <div class="metric-value loading" id="metric-disk">...</div>
             </div>
-            <div class="metric-card" onclick="runAction('check_dns')">
+            <div class="metric-card" onclick="runAction('check_hub_dns')">
                 <div class="metric-icon">🌐</div>
                 <div class="metric-label">DNS Hub</div>
                 <div class="metric-value loading" id="metric-dns">...</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-icon">🤖</div>
-                <div class="metric-label">Ollama</div>
-                <div class="metric-value loading" id="metric-ollama">...</div>
-            </div>
         </section>
 
         <!-- ── Metrics CT 103 ── -->
-        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🧠 PAQUITO (CT 103 - SSH)</h3>
+        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🧠 PAQUITO (CT 103)</h3>
         <section class="metrics-grid">
             <div class="metric-card" onclick="runAction('check_paquito_status')">
                 <div class="metric-icon">🔌</div>
                 <div class="metric-label">Estado OpenClaw</div>
                 <div class="metric-value loading" id="metric-paquito-status">...</div>
+            </div>
+            <div class="metric-card" onclick="runAction('check_paquito_logs')">
+                <div class="metric-icon">📜</div>
+                <div class="metric-label">Logs OpenClaw</div>
+                <div class="metric-value loading" id="metric-paquito-logs">...</div>
+            </div>
+            <div class="metric-card" onclick="runAction('restart_paquito_gateway')">
+                <div class="metric-icon">🔄</div>
+                <div class="metric-label">Reiniciar Gateway</div>
+                <div class="metric-value loading" id="metric-paquito-restart">Acción</div>
             </div>
             <div class="metric-card" onclick="runAction('check_paquito_ram')">
                 <div class="metric-icon">💾</div>
@@ -75,6 +80,21 @@
                 <div class="metric-icon">🌐</div>
                 <div class="metric-label">DNS Paquito</div>
                 <div class="metric-value loading" id="metric-paquito-dns">...</div>
+            </div>
+        </section>
+
+        <!-- ── Metrics Proxmox ── -->
+        <h3 style="margin-bottom: 15px; margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem; padding-left: 5px;">🖥️ PROXMOX (Host)</h3>
+        <section class="metrics-grid">
+            <div class="metric-card" onclick="runAction('check_proxmox_vms')">
+                <div class="metric-icon">📦</div>
+                <div class="metric-label">VMs y CTs</div>
+                <div class="metric-value loading" id="metric-proxmox-vms">Acción</div>
+            </div>
+            <div class="metric-card" onclick="runAction('check_proxmox_storage')">
+                <div class="metric-icon">🗄️</div>
+                <div class="metric-label">Storage Proxmox</div>
+                <div class="metric-value loading" id="metric-proxmox-storage">Acción</div>
             </div>
         </section>
 

@@ -1,2 +1,2 @@
 #!/bin/bash
-ssh root@192.168.1.146 "hostname && pgrep -af openclaw && ls -lah /tmp/openclaw | tail -n 10"
+ssh root@192.168.1.146 "hostname && pgrep -af openclaw || echo 'OpenClaw no detectado'"

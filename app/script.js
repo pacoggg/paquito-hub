@@ -1,6 +1,6 @@
 // ============================================================
 // 🧠 Paquito Hub — Frontend Logic
-// Dashboard interactions, API calls, polling, chat
+// Dashboard interactions, API calls, polling, chat, tabs
 // ============================================================
 
 const API = '';
@@ -23,6 +23,7 @@ function toast(message, type = 'info') {
 // ── Console Output ──
 function consoleLog(text, type = '') {
     const out = $('#console-output');
+    if (!out) return;
     const line = document.createElement('span');
     line.className = type;
     line.textContent = text + '\n';
@@ -31,24 +32,32 @@ function consoleLog(text, type = '') {
 }
 
 function consoleClear() {
-    $('#console-output').innerHTML = '<span class="info">Consola lista. Ejecuta una acción para ver resultados.\n</span>';
+    const out = $('#console-output');
+    if (out) out.innerHTML = '<span class="info">Consola lista. Ejecuta una acción para ver resultados.\n</span>';
 }
 
-function toggleConsole() {
-    const consoleOut = $('#console-output');
-    const consoleBody = $('.console-body');
-    const btn = $('#btn-toggle-console');
-    
-    if (consoleOut.classList.contains('collapsed')) {
-        consoleOut.classList.remove('collapsed');
-        if(consoleBody) consoleBody.classList.remove('collapsed');
-        btn.textContent = 'Ocultar';
-        localStorage.setItem('paquito-console', 'open');
+// ── Tab Management ──
+function switchTab(tabName) {
+    // Buttons
+    $$('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    const targetBtn = $(`#tab-btn-${tabName}`);
+    if (targetBtn) targetBtn.classList.add('active');
+
+    // Content
+    $$('.tab-content').forEach(content => content.classList.remove('active'));
+    const targetContent = $(`#tab-content-${tabName}`);
+    if (targetContent) targetContent.classList.add('active');
+
+    localStorage.setItem('paquito-active-tab', tabName);
+}
+
+function toggleFullscreen() {
+    document.body.classList.toggle('work-fullscreen');
+    const btn = $('.fullscreen-btn');
+    if (document.body.classList.contains('work-fullscreen')) {
+        btn.textContent = '◶';
     } else {
-        consoleOut.classList.add('collapsed');
-        if(consoleBody) consoleBody.classList.add('collapsed');
-        btn.textContent = 'Mostrar';
-        localStorage.setItem('paquito-console', 'closed');
+        btn.textContent = '⛶';
     }
 }
 
@@ -136,8 +145,8 @@ function updateStatus(id, value) {
         el.innerHTML = `🟢 ${value}`;
     } else if (value === 'OFFLINE' || value === 'FAIL') {
         el.innerHTML = `🔴 ${value}`;
-    } else if (value === 'ERROR') {
-        el.innerHTML = `🟡 ERROR`;
+    } else if (value === 'ERROR' || value === 'TIMEOUT') {
+        el.innerHTML = `🟡 ${value}`;
     } else {
         el.innerHTML = value;
     }
@@ -150,7 +159,7 @@ async function ocRestart() {
     await runAction('restart_paquito_gateway');
     setTimeout(fetchOverview, 3000);
 }
-async function ocLogs() { await runAction('logs_openclaw'); }
+async function ocLogs() { await runAction('check_paquito_logs'); }
 
 // ── AI Chat ──
 async function sendChat() {
@@ -188,6 +197,7 @@ async function sendChat() {
 
 function addChatMsg(text, role) {
     const container = $('#chat-messages');
+    if (!container) return;
     const msg = document.createElement('div');
     msg.className = `chat-msg ${role}`;
     msg.textContent = text;
@@ -199,13 +209,9 @@ function addChatMsg(text, role) {
 document.addEventListener('DOMContentLoaded', () => {
     consoleClear();
     
-    // Restore console state or default to collapsed on mobile
-    const consoleState = localStorage.getItem('paquito-console');
-    if (consoleState === 'closed' || (window.innerWidth <= 600 && !consoleState)) {
-        $('#console-output').classList.add('collapsed');
-        if ($('.console-body')) $('.console-body').classList.add('collapsed');
-        $('#btn-toggle-console').textContent = 'Mostrar';
-    }
+    // Restore tab state
+    const activeTab = localStorage.getItem('paquito-active-tab') || 'terminal';
+    switchTab(activeTab);
 
     fetchOverview();
     setInterval(fetchOverview, 10000);

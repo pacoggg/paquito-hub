@@ -11,97 +11,94 @@
 <body class="compact-mode">
     <div class="toast-container" id="toast-container"></div>
 
-    <div class="app-container">
-
-        <!-- ── Header ── -->
-        <header class="header">
-            <div class="header-left">
-                <span class="header-logo">🧠</span>
-                <div>
-                    <div class="header-title">Paquito Hub</div>
-                    <div class="header-subtitle">Control Center</div>
+    <div class="main-dashboard">
+        <!-- ── Left Column: Control Panel ── -->
+        <aside class="left-control-column">
+            <header class="header">
+                <div class="header-left">
+                    <span class="header-logo">🧠</span>
+                    <div>
+                        <div class="header-title">Paquito Hub</div>
+                        <div class="header-subtitle">Control Center</div>
+                    </div>
                 </div>
-            </div>
-            <div class="server-status">
-                <span class="status-dot" id="server-dot"></span>
-                <span>Server <strong id="server-label">...</strong></span>
-            </div>
-        </header>
+                <div class="server-status">
+                    <span class="status-dot" id="server-dot"></span>
+                    <span>Server <strong id="server-label">...</strong></span>
+                </div>
+            </header>
 
-        <!-- ── Metrics CT 102 ── -->
-        <h3 class="section-title">🖥️ HUB SERVER (CT 102)</h3>
-        <section class="metrics-grid hub-grid">
-            <div class="metric-card" onclick="runAction('check_hub_ram')">
-                <div class="metric-icon">💾</div>
-                <div class="metric-label">RAM Hub</div>
-                <div class="metric-value loading" id="metric-hub-ram">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_hub_disk')">
-                <div class="metric-icon">💿</div>
-                <div class="metric-label">Disco Hub</div>
-                <div class="metric-value loading" id="metric-hub-disk">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_hub_dns')">
-                <div class="metric-icon">🌐</div>
-                <div class="metric-label">DNS Hub</div>
-                <div class="metric-value loading" id="metric-hub-dns">...</div>
-            </div>
-        </section>
+            <!-- Metrics Hub -->
+            <h3 class="section-title">🖥️ HUB SERVER (CT 102)</h3>
+            <section class="metrics-grid hub-grid">
+                <div class="metric-card" onclick="runAction('check_hub_ram')">
+                    <div class="metric-icon">💾</div>
+                    <div class="metric-label">RAM Hub</div>
+                    <div class="metric-value loading" id="metric-hub-ram">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_hub_disk')">
+                    <div class="metric-icon">💿</div>
+                    <div class="metric-label">Disco Hub</div>
+                    <div class="metric-value loading" id="metric-hub-disk">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_hub_dns')">
+                    <div class="metric-icon">🌐</div>
+                    <div class="metric-label">DNS Hub</div>
+                    <div class="metric-value loading" id="metric-hub-dns">...</div>
+                </div>
+            </section>
 
-        <!-- ── Metrics CT 103 ── -->
-        <h3 class="section-title">🧠 PAQUITO (CT 103)</h3>
-        <section class="metrics-grid paquito-grid">
-            <div class="metric-card" onclick="runAction('check_paquito_status')">
-                <div class="metric-icon">🔌</div>
-                <div class="metric-label">Estado OpenClaw</div>
-                <div class="metric-value loading" id="metric-paquito-status">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_paquito_logs')">
-                <div class="metric-icon">📜</div>
-                <div class="metric-label">Logs OpenClaw</div>
-                <div class="metric-value loading" id="metric-paquito-logs">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('restart_paquito_gateway')">
-                <div class="metric-icon">🔄</div>
-                <div class="metric-label">Reiniciar Gateway</div>
-                <div class="metric-value loading" id="metric-paquito-restart">Acción</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_paquito_ram')">
-                <div class="metric-icon">💾</div>
-                <div class="metric-label">RAM Paquito</div>
-                <div class="metric-value loading" id="metric-paquito-ram">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_paquito_disk')">
-                <div class="metric-icon">💿</div>
-                <div class="metric-label">Disco Paquito</div>
-                <div class="metric-value loading" id="metric-paquito-disk">...</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_paquito_dns')">
-                <div class="metric-icon">🌐</div>
-                <div class="metric-label">DNS Paquito</div>
-                <div class="metric-value loading" id="metric-paquito-dns">...</div>
-            </div>
-        </section>
+            <!-- Metrics Paquito -->
+            <h3 class="section-title">🧠 PAQUITO (CT 103)</h3>
+            <section class="metrics-grid paquito-grid">
+                <div class="metric-card" onclick="runAction('check_paquito_status')">
+                    <div class="metric-icon">🔌</div>
+                    <div class="metric-label">Estado OpenClaw</div>
+                    <div class="metric-value loading" id="metric-paquito-status">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_paquito_logs')">
+                    <div class="metric-icon">📜</div>
+                    <div class="metric-label">Logs OpenClaw</div>
+                    <div class="metric-value loading" id="metric-paquito-logs">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('restart_paquito_gateway')">
+                    <div class="metric-icon">🔄</div>
+                    <div class="metric-label">Reiniciar Gateway</div>
+                    <div class="metric-value loading" id="metric-paquito-restart">Acción</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_paquito_ram')">
+                    <div class="metric-icon">💾</div>
+                    <div class="metric-label">RAM Paquito</div>
+                    <div class="metric-value loading" id="metric-paquito-ram">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_paquito_disk')">
+                    <div class="metric-icon">💿</div>
+                    <div class="metric-label">Disco Paquito</div>
+                    <div class="metric-value loading" id="metric-paquito-disk">...</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_paquito_dns')">
+                    <div class="metric-icon">🌐</div>
+                    <div class="metric-label">DNS Paquito</div>
+                    <div class="metric-value loading" id="metric-paquito-dns">...</div>
+                </div>
+            </section>
 
-        <!-- ── Metrics Proxmox ── -->
-        <h3 class="section-title">🖥️ PROXMOX (Host)</h3>
-        <section class="metrics-grid proxmox-grid">
-            <div class="metric-card" onclick="runAction('check_proxmox_vms')">
-                <div class="metric-icon">📦</div>
-                <div class="metric-label">VMs y CTs</div>
-                <div class="metric-value loading" id="metric-proxmox-vms">Acción</div>
-            </div>
-            <div class="metric-card" onclick="runAction('check_proxmox_storage')">
-                <div class="metric-icon">🗄️</div>
-                <div class="metric-label">Storage Proxmox</div>
-                <div class="metric-value loading" id="metric-proxmox-storage">Acción</div>
-            </div>
-        </section>
+            <!-- Metrics Proxmox -->
+            <h3 class="section-title">🖥️ PROXMOX (Host)</h3>
+            <section class="metrics-grid proxmox-grid">
+                <div class="metric-card" onclick="runAction('check_proxmox_vms')">
+                    <div class="metric-icon">📦</div>
+                    <div class="metric-label">VMs y CTs</div>
+                    <div class="metric-value loading" id="metric-proxmox-vms">Acción</div>
+                </div>
+                <div class="metric-card" onclick="runAction('check_proxmox_storage')">
+                    <div class="metric-icon">🗄️</div>
+                    <div class="metric-label">Storage Proxmox</div>
+                    <div class="metric-value loading" id="metric-proxmox-storage">Acción</div>
+                </div>
+            </section>
 
-        <!-- ── Main Panels ── -->
-        <section class="panels-grid">
-
-            <!-- OpenClaw Control -->
+            <!-- OpenClaw Control Panel -->
             <div class="panel">
                 <div class="panel-header">
                     <span class="panel-title">🔧 OpenClaw Control</span>
@@ -115,38 +112,46 @@
                     </div>
                 </div>
             </div>
+        </aside>
 
-            <!-- AI Terminal -->
-            <div class="panel" id="terminal-panel">
-                <div class="panel-header">
-                    <span class="panel-title">🤖 Terminal IA</span>
-                    <span class="panel-badge badge-online">PAQUITO</span>
+        <!-- ── Right Column: Work Column (Tabs) ── -->
+        <main class="right-work-column">
+            <nav class="tabs-nav">
+                <div class="tabs-buttons">
+                    <button class="tab-btn active" id="tab-btn-terminal" onclick="switchTab('terminal')">🤖 Terminal IA</button>
+                    <button class="tab-btn" id="tab-btn-console" onclick="switchTab('console')">📟 Console Output</button>
                 </div>
-                <div class="panel-body">
-                    <div class="chat-messages" id="chat-messages"></div>
-                    <div class="chat-input-row">
-                        <input type="text" class="chat-input" id="chat-input" placeholder="Escribe un comando o pregunta..." autocomplete="off">
-                        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">Enviar</button>
+                <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Pantalla Completa">⛶</button>
+            </nav>
+
+            <div id="tab-content-terminal" class="tab-content active">
+                <div class="panel terminal-panel-full" id="terminal-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🤖 Paquito IA Virtual Terminal</span>
+                        <span class="panel-badge badge-online">Ollama Local</span>
+                    </div>
+                    <div class="panel-body chat-container-full">
+                        <div class="chat-messages" id="chat-messages"></div>
+                        <div class="chat-input-row">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Escribe un comando o pregunta..." autocomplete="off">
+                            <button class="chat-send" id="chat-send-btn" onclick="sendChat()">Enviar</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-        </section>
-
-        <!-- ── Console Output ── -->
-        <section class="panel console-panel">
-            <div class="panel-header">
-                <span class="panel-title">📟 Console Output</span>
-                <div class="header-actions">
-                    <button class="control-btn" onclick="toggleConsole()" style="padding:6px 14px;font-size:0.72rem;margin-right:8px;" id="btn-toggle-console">Ocultar</button>
-                    <button class="control-btn" onclick="consoleClear()" style="padding:6px 14px;font-size:0.72rem;" id="btn-clear-console">Limpiar</button>
+            <div id="tab-content-console" class="tab-content">
+                <div class="panel console-panel-full">
+                    <div class="panel-header">
+                        <span class="panel-title">📟 Live Execution Logs</span>
+                        <button class="control-btn" onclick="consoleClear()" style="padding:6px 14px;font-size:0.72rem;" id="btn-clear-console">Limpiar</button>
+                    </div>
+                    <div class="panel-body console-body-full">
+                        <div class="console-output" id="console-output"></div>
+                    </div>
                 </div>
             </div>
-            <div class="panel-body console-body">
-                <div class="console-output" id="console-output"></div>
-            </div>
-        </section>
-
+        </main>
     </div>
 
     <script src="script.js"></script>

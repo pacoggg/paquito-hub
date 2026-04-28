@@ -30,7 +30,7 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 15px; scroll-behavior: smooth; overflow-x: hidden; overflow-y: auto; --left-width: 50%; }
+html { font-size: 15px; scroll-behavior: smooth; overflow-x: hidden; --left-width: 50%; }
 
 body {
     font-family: 'Inter', -apple-system, sans-serif;
@@ -365,7 +365,28 @@ body::before {
 @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
 /* ── Responsive ── */
-@media (max-width: 1100px), (max-height: 800px) {
+@media (min-width: 900px) {
+    html, body {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .main-dashboard {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .left-control-column, .right-work-column {
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .column-resizer {
+        display: block;
+    }
+}
+
+@media (max-width: 899px) {
     html, body {
         height: auto;
         min-height: 100%;
@@ -373,6 +394,8 @@ body::before {
     }
 
     .main-dashboard {
+        display: flex;
+        flex-direction: column;
         grid-template-columns: 1fr;
         height: auto;
         min-height: 100vh;
@@ -384,6 +407,8 @@ body::before {
     }
 
     .left-control-column, .right-work-column {
+        width: 100%;
+        max-width: 100%;
         height: auto;
         max-height: none;
         overflow: visible;
